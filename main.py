@@ -1,18 +1,36 @@
 import PySimpleGUI as sg
 
 layout = [
-    [sg.Text('Text'), sg.Spin(['item1', 'item2'])],
-    [sg.Button('Button')],
-    [sg.Input()],
-    [sg.Text('Test'), sg.Button('TestButton')]
+    [
+        sg.Input(key = '-INPUT-'), 
+        sg.Spin(['km to mile', 'kg to pound', 'sec to min'], key = '-UNITS-'), 
+        sg.Button('convert', key = '-CONVERT-')
+    ],
+    [sg.Text('Output', key = '-OUTPUT-')]
 ]
 window = sg.Window('Converter', layout)
 
 while True:
     event, values = window.read()
+
     if event == sg.WINDOW_CLOSED:
         break
-
-
+    
+    if event == '-CONVERT-':
+        input_value = values['-INPUT-']
+        if input_value.isnumeric():
+            match values['-UNITS-']:
+                case 'km to mile':
+                    output = round(float(input_value) * 0.624, 2)
+                    output_string = f'{input_value} km are {output} miles'
+                case 'kg to pounds':
+                    output = round(float(input_value) * 2.20462, 2)
+                    output_string = f'{input_value} km are {output} miles'
+                case 'sec to min':
+                    output = round(float(input_value) / 60, 2)
+                    output_string = f'{input_value} km are {output} miles'
+            window['-OUTPUT-'].update(output_string)
+        else:
+            window['-OUTPUT-'].update('Please enter a number')
 
 window.close() 
